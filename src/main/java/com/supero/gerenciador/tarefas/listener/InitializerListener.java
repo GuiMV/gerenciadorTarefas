@@ -8,8 +8,6 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class InitializerListener implements ServletContextListener {
 
-    private long UM_DIA_MILLIS = 1000 * 60 * 60 * 24;
-
     @Override
     public void contextInitialized(ServletContextEvent event) {
         System.out.println("--> InitializerListener iniciando");

@@ -4,7 +4,6 @@ import com.supero.gerenciador.tarefas.persistence.PersistenceUtil;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class PersistenceFilter implements Filter {

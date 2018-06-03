@@ -27,9 +27,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
     //Obtém o estado atual da navegação entre páginas do JSF
     final NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
 
-    //Declara o construtor que recebe uma exceptio do tipo ExceptionHandler como parâmetro
-
-
+    //Declara o construtor que recebe uma exception do tipo ExceptionHandler como parâmetro
     public CustomExceptionHandler(ExceptionHandler wrapped) {
         super(wrapped);
         this.wrapped = wrapped;
@@ -64,8 +62,6 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                 // Avisa o usuário do erro
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
 
-                // Seta a navegação para uma página padrão.
-//                navigationHandler.handleNavigation(facesContext, null, "/restrict/home.faces");
                 // Renderiza a pagina de erro e exibe as mensagens
                 facesContext.renderResponse();
             } finally {

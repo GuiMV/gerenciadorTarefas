@@ -14,6 +14,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 import java.io.IOException;
 import java.util.*;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @FacesRenderer(componentFamily = "javax.faces.Messages", rendererType = "javax.faces.Messages")
 public class NotyMessagesRenderer extends MessagesRenderer {
@@ -37,16 +39,16 @@ public class NotyMessagesRenderer extends MessagesRenderer {
 
         UIMessages messages = (UIMessages) component;
         ResponseWriter writer = context.getResponseWriter();
-        assert (writer != null);
+        assert (nonNull(writer));
 
         String clientId = ((UIMessages) component).getFor();
-        if (clientId == null && messages.isGlobalOnly()) {
+        if (isNull(clientId) && messages.isGlobalOnly()) {
             clientId = "";
         }
 
         Iterator messageIter = getMessageIter(context, clientId, component);
 
-        assert (messageIter != null);
+        assert (nonNull(messageIter));
 
         if (!messageIter.hasNext()) {
             if (mustRender) {
@@ -62,7 +64,6 @@ public class NotyMessagesRenderer extends MessagesRenderer {
 
         writeIdAttributeIfNecessary(context, writer, component);
 
-        // style is rendered as a passthru attribute
         RenderKitUtils.renderPassThruAttributes(context, writer, component, ATTRIBUTES);
 
         Map<Severity, List<FacesMessage>> msgs = new HashMap<>();
@@ -80,24 +81,12 @@ public class NotyMessagesRenderer extends MessagesRenderer {
             msgs.get(curMessage.getSeverity()).add(curMessage);
         }
 
-        List<FacesMessage> severityMessages = msgs.get(FacesMessage.SEVERITY_FATAL);
-        if (severityMessages.size() > 0) {
-            encodeSeverityMessages(context, messages, FacesMessage.SEVERITY_FATAL, severityMessages);
-        }
-
-        severityMessages = msgs.get(FacesMessage.SEVERITY_ERROR);
-        if (severityMessages.size() > 0) {
-            encodeSeverityMessages(context, messages, FacesMessage.SEVERITY_ERROR, severityMessages);
-        }
-
-        severityMessages = msgs.get(FacesMessage.SEVERITY_WARN);
-        if (severityMessages.size() > 0) {
-            encodeSeverityMessages(context, messages, FacesMessage.SEVERITY_WARN, severityMessages);
-        }
-
-        severityMessages = msgs.get(FacesMessage.SEVERITY_INFO);
-        if (severityMessages.size() > 0) {
-            encodeSeverityMessages(context, messages, FacesMessage.SEVERITY_INFO, severityMessages);
+        for (Map.Entry<Severity, List<FacesMessage>> entry : msgs.entrySet()) {
+            Severity severity = entry.getKey();
+            List<FacesMessage> severityMessages = entry.getValue();
+            if (!severityMessages.isEmpty()) {
+                encodeSeverityMessages(context, messages, severity, severityMessages);
+            }
         }
         super.encodeEnd(context, component);
     }
@@ -110,16 +99,14 @@ public class NotyMessagesRenderer extends MessagesRenderer {
             typeMessage = "info";
         } else if (FacesMessage.SEVERITY_WARN.equals(severity)) {
             typeMessage = "warning";
-        } else if (FacesMessage.SEVERITY_ERROR.equals(severity)) {
-            typeMessage = "error";
-        } else if (FacesMessage.SEVERITY_FATAL.equals(severity)) {
+        } else if (FacesMessage.SEVERITY_ERROR.equals(severity) || FacesMessage.SEVERITY_FATAL.equals(severity)) {
             typeMessage = "error";
         }
 
         String mensagem = "";
         for (FacesMessage msg : messages) {
-            String summary = msg.getSummary() != null ? msg.getSummary() : "";
-            String detail = msg.getDetail() != null ? msg.getDetail() : summary;
+            String summary =  nonNull(msg.getSummary()) ? msg.getSummary() : "";
+            String detail = nonNull(msg.getDetail()) ? msg.getDetail() : summary;
 
             if (uiMessages.isShowSummary()) {
                 mensagem += summary + "<br/>";
