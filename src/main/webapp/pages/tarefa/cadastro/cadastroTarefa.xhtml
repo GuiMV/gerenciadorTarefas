@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/pages/templates/template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="conteudo">
+        <div class="box"> 
+            <div class="box-header">
+                <div class="box-left"><i class="fa fa-edit"></i></div><label>Cadastro de Tarefa</label>
+            </div>
+            <div class="box-content">
+                <div class="row">
+                    <div class="col-xs-12 col-md-2  go-top">
+                        <h:inputText class="col-xs-12"
+                                     required="true"
+                                     requiredMessage="Campo Título é obrigatório"
+                                     maxlength="128"
+                                     value="#{mbCadastroTarefa.tarefa.titulo}"/>
+                        <label>Título</label>
+                    </div>
+                    <div class="col-xs-12 col-md-2  go-top">
+                        <h:selectOneMenu class="col-xs-12"
+                                         value="#{mbCadastroTarefa.tarefa.concluido}">
+                            <f:selectItem itemValue="false" itemLabel="Aberto"/>
+                            <f:selectItem itemValue="true" itemLabel="Concluído"/>
+                        </h:selectOneMenu>
+                        <label>Status</label>
+                    </div>
+                    <div class="col-xs-12 go-top">
+                        <h:inputText class="col-xs-12"
+                                     maxlength="512"
+                                     value="#{mbCadastroTarefa.tarefa.descricao}"/>
+                        <label>Descrição</label>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <h:commandButton value="Salvar"
+                                 action="#{mbCadastroTarefa.salvar()}"
+                                 class="btn btn-primary">
+                    <f:ajax execute="form" render="form messages"/>
+                </h:commandButton>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
